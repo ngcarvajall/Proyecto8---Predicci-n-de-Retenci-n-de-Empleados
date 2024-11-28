@@ -326,3 +326,52 @@ def graficar_relaciones_categoricas(dataframe, vr):
     # Ajustar la disposición
     plt.tight_layout()
     plt.show()
+
+def graficar_relaciones_numericas(dataframe, vr):
+    """
+    Genera gráficos de histogramas en un subplot para todas las columnas numéricas
+    mostrando su relación con la variable de respuesta, omitiendo la variable de respuesta misma.
+    
+    Args:
+    - dataframe (pd.DataFrame): DataFrame que contiene los datos.
+    - vr (str): Nombre de la variable de respuesta.
+    """
+    # Seleccionar columnas numéricas del DataFrame
+    lista_num = dataframe.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    
+    # Configurar el número de filas y columnas del subplot
+    num_columnas = len(lista_num)
+    cols = 2  # Número de gráficos por fila
+    filas = math.ceil(num_columnas / cols)  # Calcula las filas necesarias
+    
+    # Configurar la figura
+    fig, axes = plt.subplots(nrows=filas, ncols=cols, figsize=(16, 6 * filas))
+    axes = axes.flatten()  # Asegura que axes sea una lista para iterar fácilmente
+    
+    # Contador para manejar los subplots correctamente
+    plot_index = 0
+    
+    # Iterar sobre las columnas numéricas y crear gráficos
+    for columna in lista_num:  # Itera solo sobre las columnas numéricas
+        if columna == vr:  # Si la columna es la variable de respuesta, omitirla
+            continue
+        
+        sns.histplot(x=columna, 
+                     hue=vr, 
+                     data=dataframe, 
+                     ax=axes[plot_index], 
+                     palette="magma", 
+                     legend=True)  # Activa la leyenda
+        axes[plot_index].set_title(f"Relación {columna} vs {vr}")
+        axes[plot_index].set_xlabel(columna)
+        axes[plot_index].set_ylabel("Frecuencia")
+        axes[plot_index].tick_params(axis='x', rotation=45)
+        plot_index += 1  # Incrementar el índice del subplot
+    
+    # Ocultar cualquier gráfico sobrante si hay menos variables que subplots
+    for j in range(plot_index, len(axes)):
+        fig.delaxes(axes[j])  # Elimina subplots vacíos
+    
+    # Ajustar la disposición
+    plt.tight_layout()
+    plt.show()

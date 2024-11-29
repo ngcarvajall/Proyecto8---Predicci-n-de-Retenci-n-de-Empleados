@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 from scipy.stats import chi2_contingency
+from sklearn.preprocessing import RobustScaler, MinMaxScaler, Normalizer, StandardScaler
 
 
 def exploracion_dataframe(dataframe, columna_control):
@@ -65,7 +66,7 @@ def relacion_vr_categoricas(dataframe, variable_respuesta, paleta = 'bright', ta
         axes[indice].set_xlabel('')
 
 def relacion_numericas(dataframe, variable_respuesta, paleta = 'bright', tamaño_graficas = (15,10)):
-    numericas = separar_dataframe(dataframe)[0]
+    numericas = separar_dataframes(dataframe)[0]
     cols_numericas = numericas.columns
     num_filas = math.ceil(len(cols_numericas) / 2)
     fig, axes = plt.subplots(nrows = num_filas, ncols = 2, figsize = tamaño_graficas)
@@ -95,7 +96,7 @@ def matriz_correlacion(dataframe, figsize = (5,3)):
     plt.tight_layout()
 
 def detectar_outliers(dataframe, color='red', tamaño_grafica=(15,10)):
-    df_num = separar_dataframe(dataframe)[0]
+    df_num = separar_dataframes(dataframe)[0]
     num_filas= math.ceil(len(df_num.columns)/2)
     fig, axes = plt.subplots(ncols=2, nrows=num_filas, figsize=tamaño_grafica)
     axes = axes.flat
@@ -204,8 +205,6 @@ def plot_numericas(dataframe, figsize=(10,8)):
 
     plt.tight_layout()
 
-
-
 def plot_categoricas(dataframe, paleta="bright", tamano_grafica=(15, 8)):
     """
     Grafica la distribución de las variables categóricas del DataFrame.
@@ -245,6 +244,8 @@ def relacion_vr_numericas_problema_categorico(df, vr):
     plt.tight_layout()
 
 def detectar_orden_cat(df, lista_cat, var_respuesta):
+    lista_ordenadas = []
+    lista_desordenadas = []
     for categorica in lista_cat:
         print(f'Estamos evaluando la variable {categorica.upper()}')
         df_cross_tab = pd.crosstab(df[categorica], df[var_respuesta])
@@ -254,8 +255,12 @@ def detectar_orden_cat(df, lista_cat, var_respuesta):
         
         if p < 0.05:
             print(f'Sí tiene orden la variable {categorica}')
+            lista_ordenadas.append(categorica)
         else:
             print(f'La variable {categorica} no tiene orden')
+            lista_desordenadas.append(categorica)
+
+    return lista_ordenadas, lista_desordenadas
 
 def plot_relacion(self, vr, tamano_grafica=(40, 12)):
 
@@ -375,3 +380,79 @@ def graficar_relaciones_numericas(dataframe, vr):
     # Ajustar la disposición
     plt.tight_layout()
     plt.show()
+
+def visualizar_escalados_completos(df, lista_num):
+    """
+    Genera subplots para boxplots e histogramas de las columnas numéricas originales
+    y sus versiones escaladas, cubriendo todas las columnas.
+    
+    Args:
+    - df (pd.DataFrame): DataFrame con las columnas originales y escaladas.
+    - lista_num (list): Lista de nombres de columnas numéricas originales.
+    """
+    # Sufijos para las versiones escaladas
+    sufijos = ["robust", "minmax", "norm", "stand", ""]
+    
+    # Crear lista completa de columnas originales y escaladas
+    columnas_totales = [f"{col}_{sufijo}" if sufijo else col for col in lista_num for sufijo in sufijos]
+    
+    # Número de columnas por fila en los subplots
+    num_columnas = 5  # Máximo 5 gráficos por fila
+    num_filas = math.ceil(len(columnas_totales) / num_columnas)  # Calcula filas necesarias
+    
+    # Crear figura
+    fig, axes = plt.subplots(nrows=num_filas, ncols=num_columnas, figsize=(20, 5 * num_filas))
+    axes = axes.flatten()  # Asegura que los ejes sean iterables
+    
+    # Iterar sobre las columnas para graficar
+    for indice, col in enumerate(columnas_totales):
+        if col in df.columns:  # Verifica que la columna exista en el DataFrame
+            # Alternar entre boxplots e histogramas
+            if "robust" in col or "minmax" in col or "norm" in col or "stand" in col:
+                sns.boxplot(x=col, data=df, ax=axes[indice])
+            else:
+                sns.histplot(x=col, data=df, ax=axes[indice], bins=50)
+            axes[indice].set_title(f"{col}")
+        else:
+            axes[indice].set_visible(False)  # Oculta subplots sin datos
+    
+    # Ocultar cualquier gráfico sobrante
+    for j in range(len(columnas_totales), len(axes)):
+        fig.delaxes(axes[j])
+    
+    # Ajustar diseño
+    plt.tight_layout()
+    plt.show()
+
+
+def escalar_columnas(df, columnas_numericas):
+    """
+    Escala las columnas numéricas del DataFrame utilizando diferentes técnicas
+    y agrega las columnas escaladas al DataFrame original.
+    
+    Args:
+    - df (pd.DataFrame): DataFrame original.
+    - columnas_numericas (list): Lista de nombres de columnas numéricas a escalar.
+    
+    Returns:
+    - pd.DataFrame: DataFrame con las columnas escaladas añadidas.
+    """
+    # Inicializar escaladores
+    escaladores = {
+        "robust": RobustScaler(),
+        "minmax": MinMaxScaler(),
+        "norm": Normalizer(),
+        "stand": StandardScaler()
+    }
+    
+    for nombre, escalador in escaladores.items():
+        # Aplicar el escalador a las columnas numéricas
+        datos_transformados = escalador.fit_transform(df[columnas_numericas])
+        
+        # Crear nombres para las columnas escaladas
+        nombres_columnas = [f"{col}_{nombre}" for col in columnas_numericas]
+        
+        # Agregar las columnas transformadas al DataFrame original
+        df[nombres_columnas] = datos_transformados
+    
+    return df

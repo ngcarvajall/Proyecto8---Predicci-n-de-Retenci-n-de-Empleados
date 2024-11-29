@@ -269,17 +269,15 @@ class AnalisisModelosClasificacion:
             raise ValueError(f"Modelo '{modelo_nombre}' no reconocido.")
 
         modelo = self.resultados[modelo_nombre]["mejor_modelo"]
-
         if modelo is None:
             raise ValueError(f"Debe ajustar el modelo '{modelo_nombre}' antes de generar el SHAP plot.")
-
         y_pred = self.resultados[modelo_nombre]["pred_test"]
 
         if hasattr(modelo, "predict_proba"):
             prob_test = modelo.predict_proba(self.X_test)[:, 1]
 
 
-        fpr, tpr, _ = roc_curve(y_pred, prob_test)
+        fpr, tpr, _ = roc_curve(self.y_test, self.prob_test)
         plt.figure(figsize=(5,3))
         sns.lineplot(x=fpr, y=tpr, color='green')
         sns.lineplot(x=[0,1], y=[0,1], color = 'grey')

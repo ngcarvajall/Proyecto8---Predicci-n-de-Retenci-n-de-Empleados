@@ -117,7 +117,7 @@ class AnalisisModelosClasificacion:
             self.resultados[modelo_nombre]["mejor_modelo"] = grid_search.best_estimator_
             self.resultados[modelo_nombre]["pred_train"] = grid_search.best_estimator_.predict(self.X_train)
             self.resultados[modelo_nombre]["pred_test"] = grid_search.best_estimator_.predict(self.X_test)
-
+        return modelo_logistica
 
 
 

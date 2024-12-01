@@ -16,4 +16,14 @@ Modelo 2:
     - Para este modelo, me quedo con el decision tree. Para este modelo las métricas brillan por ser bastante malas fruto del enorme desbalanceo.
 
 Modelo 3:
-    - 
+    - Mejor modelo, sin duplicados y balanceado en primer lugar con Tomek para disminuir la el grupo dominante de mi variable respuesta. Esto no provocó una gran caída, sino la desaparición de unos 50 datos. Luego de esto, hice un SmoteNC ya que permite diferenciar las categóricas a la hora de hacer el proceso. Con este hice un balanceo para que mi variable respuesta quede en unos parámetros 55-45. De esta forma no creo tantos valores artificales como para equiparar al 50%.
+    - Una vez hecho dicho procedimiento, seguí con mis modelos para ver cuáles métricas eran las mejores y a través de que modelo podía conseguirlas. Debajo dejo un cuadro comparativo respecto a esto.
+
+
+    | **Modelo**          | **Generalización** | **Sobreajuste** | **Métricas en test** | **Velocidad** | **Comentario**                      |
+    |----------------------|--------------------|-----------------|----------------------|---------------|--------------------------------------|
+    | **Regresión logística** | Alta               | Bajo            | Buenas (0.87-0.88)  | Muy alta      | Consistente, eficiente, confiable.  |
+    | **XGBoost**          | Media              | Alto            | Muy buenas (0.91)   | Moderada      | Alto rendimiento pero sobreajusta.  |
+    | **Random Forest**    | Media              | Alto            | Muy buenas (0.91)   | Baja          | Costoso y sobreajustado.            |
+    | **Gradient Boosting**| Moderada           | Moderado        | Buenas (0.88-0.90)  | Moderada      | Competitivo, buen equilibrio.       |
+    | **Decision Tree**    | Baja               | Bajo            | Débiles (0.79)      | Moderada      | Modelo menos competitivo.           |

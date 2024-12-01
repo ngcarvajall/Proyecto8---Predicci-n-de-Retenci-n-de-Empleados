@@ -9,6 +9,7 @@ Modelo 1:
 Modelo 2:
     - Este modelo, al eliminar la columna que identificaba cada usuario de manera individual (EmployeeID) nos deja con menos del 40% de los datos. A partir de este momento, vamos a trabajar con una nueva cantidad de datos para conocerlos y hacer un preprocesamiento para un nuevo modelo.
     - Aquí, al eliminar los nulos nos hemos quedado con una gran cantidad de 'No' en nuestra variable respuesta por encima de su contraparte 'Yes' para la columna Attrition. Esto es un desbalanceo. Para este modelo no vamos a balancear, la intención es ver con este modelo cómo puede predecir con datos desbalanceados y nuestro próximo modelo (Modelo 3) sí tendrá datos balanceados. De esta forma podemos contrastar entre todos.
-
+    - En el primer año de trabajo, hay una gran fuga de empleados.
+    - 
 Modelo 3:
     - 

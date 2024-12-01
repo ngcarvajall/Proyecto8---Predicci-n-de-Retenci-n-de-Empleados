@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 
 # Para tratar el problema de desbalance
 # -----------------------------------------------------------------------
-from imblearn.over_sampling import RandomOverSampler, SMOTE
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler, SMOTE, SMOTENC
+from imblearn.under_sampling import RandomUnderSampler, TomekLinks
 from imblearn.combine import SMOTETomek
 
 
@@ -330,3 +330,30 @@ class Desbalanceo:
         df_resampled = pd.concat([pd.DataFrame(X_resampled, columns=X.columns), pd.Series(y_resampled, name=self.variable_dependiente)], axis=1)
         return df_resampled
 
+    def balancear_clases_tomek(self,sampling_strategy="auto"):
+            """
+            Aplica el método de Tomek Links para balancear clases eliminando pares cercanos
+            entre la clase mayoritaria y la minoritaria.
+
+            Returns:
+                pd.DataFrame: DataFrame balanceado tras aplicar Tomek Links.
+            """
+            X = self.dataframe.drop(columns=[self.variable_dependiente])
+            y = self.dataframe[self.variable_dependiente]
+
+            tomek = TomekLinks(sampling_strategy=sampling_strategy)
+            X_resampled, y_resampled = tomek.fit_resample(X, y)
+            df_resampled = pd.concat([pd.DataFrame(X_resampled, columns=X.columns), 
+                                    pd.Series(y_resampled, name=self.variable_dependiente)], axis=1)
+
+            return df_resampled
+    
+    def balancear_clase_smotenc(self, columnas_categoricasencoded,sampling_strategy="auto"):
+        X = self.dataframe.drop(columns=[self.variable_dependiente])
+        y = self.dataframe[self.variable_dependiente]
+
+        smotenc = SMOTENC(random_state=42, categorical_features=columnas_categoricasencoded,sampling_strategy=sampling_strategy)
+        X_resampled, y_resampled = smotenc.fit_resample(X, y)
+
+        df_resampled = pd.concat([pd.DataFrame(X_resampled, columns=X.columns), pd.Series(y_resampled, name=self.variable_dependiente)], axis=1)
+        return df_resampled

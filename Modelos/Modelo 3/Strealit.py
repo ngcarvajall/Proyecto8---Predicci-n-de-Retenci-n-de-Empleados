@@ -17,11 +17,11 @@ st.title("📠 Predicción de la probabilidad de partida de un empleado")
 st.write("Usa esta aplicación para predecir la probabilidad de partida de un empleado de tu empresa basandote en sus respuestas a encuestas y características demográficas.")
 
 # Mostrar una imagen
-st.image(
-    "C:\\Users\\jaime\\Desktop\\proyectos\\Proyecto 8\\Proyecto8-Predicci-n-de-Retenci-n-de-Empleados\\Imagen\\imagen_oficina.webp",  # URL de la imagen
-    caption="Retén a tus empleados.",
-    use_column_width=True,
-)
+# st.image(
+#     "C:\Users\DELL\Git\Proyecto8---Predicci-n-de-Retenci-n-de-Empleados\imagen.webp",  # URL de la imagen
+#     caption="Retén a tus empleados.",
+#     use_column_width=True,
+# )
 
 
 # Cargar los modelos y transformadores entrenados
@@ -48,7 +48,7 @@ col1, col2 ,col3= st.columns(3)
 
 with col1:
     Age = st.number_input("Edad", min_value=18,max_value=60 , value=30, step=1, help="Elige la edad del trabajador entre 18 y 60")
-    Education = st.selectbox("Educación", ['Below College', 'College', 'Bachelor', 'Master', 'Doctor'], help="Elige la educación del trabajador")
+    Education = st.selectbox("Educación", [1,2,3,4,5], help="Elige la educación del trabajador")
     EducationField= st.selectbox("Campo de Estudio", ['Life Sciences', 'Other', 'Medical', 'Marketing','Technical Degree', 'Human Resources'])
     Gender= st.selectbox("Género", ['Female', 'Male'])
     MaritalStatus = st.selectbox("Estado civil", ['Married', 'Single', 'Divorced'], help="Elige el estado civil del empleado")
@@ -65,6 +65,8 @@ with col2:
     MonthlyIncome= st.slider("Salario mensual",114,2260,500)
     PercentSalaryHike= st.slider('Porcentaje de subida de salario', 11,25,15)
     StockOptionLevel= st.selectbox('Nivel de reparto de acciones', [0,1,2,3])
+    YearsWithCurrManager= st.slider("Tiempo bajo su gerente", 1,17,5 , help="Elige el tiempo que lleva trabajando con su mismo gerente")
+
     
 with col3:
     TrainingTimesLastYear= st.number_input('Número de formaciones en el último año', min_value=0,max_value=6 , value=1, step=1)
@@ -74,9 +76,7 @@ with col3:
     JobSatisfaction= st.selectbox('Nivel de satisfacción en el trabajo', [1,2,3,4])
     WorkLifeBalance= st.selectbox('Nivel de satisfacción con el balance vida-trabajo', [1,2,3,4])
     JobInvolvement= st.selectbox('Nivel de implicación en el trabajo', [1,2,3,4])
-
-
-
+    PerformanceRating= st.selectbox('Nivel de desempeño laboral del empleado', [1,2,3,4])
 
 
 # Botón para realizar la predicción
@@ -96,24 +96,26 @@ if st.button("Predecir si el empleado se va 🤞"):
         'MonthlyIncome': [MonthlyIncome],
         'NumCompaniesWorked': [NumCompaniesWorked],
         'PercentSalaryHike': [PercentSalaryHike],
-        'StockOptionLevel': [StockOptionLevel],
+        'StockOptionLevel': [str(StockOptionLevel)],
         'TotalWorkingYears': [TotalWorkingYears],
-        'TrainingTimesLastYear': [TrainingTimesLastYear],
+        'TrainingTimesLastYear': [str(TrainingTimesLastYear)],
         'YearsAtCompany': [YearsAtCompany],
         'YearsSinceLastPromotion': [YearsSinceLastPromotion],
-        'EnvironmentSatisfaction' : [EnvironmentSatisfaction],
-        'JobSatisfaction' : [JobSatisfaction],
-        'WorkLifeBalance': [ WorkLifeBalance],
-        'JobInvolvement': [JobInvolvement]       
+        'YearsWithCurrManager': [YearsWithCurrManager],
+        'EnvironmentSatisfaction' : [str(EnvironmentSatisfaction)],
+        'JobSatisfaction' : [str(JobSatisfaction)],
+        'WorkLifeBalance': [str(WorkLifeBalance)],
+        'JobInvolvement': [str(JobInvolvement)],
+        'PerformanceRating': [str(PerformanceRating)]      
     })
   
     new_employee=pd.DataFrame(new_employee)
 
-    new_employee.drop(columns="Attrition", inplace=True)
+    # new_employee.drop(columns="Attrition", inplace=True)
     new_employee_encoded = scaler.transform(new_employee)
     new_employee_encoded = pd.DataFrame(new_employee_encoded)
     # new_house_encoded.drop(columns=6,inplace=True)
-    new_employee["Attrition"]=new_employee_encoded[6]
+    # new_employee["Attrition"]=new_employee_encoded[6]
 
     
     

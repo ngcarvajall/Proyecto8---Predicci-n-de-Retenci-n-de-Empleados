@@ -44,7 +44,6 @@ Los resultados no solo buscan ser precisos, sino también útiles para tomar dec
 │   │   ├── main.py                  # Script principal para la API
 │   │   ├── Streamlit.py             # Interfaz con Streamlit (en prueba)
 ├── src/                  # Scripts de procesamiento y modelado
-├── Métricas/             # Reportes de métricas de evaluación
 ├── README1.md             # Descripción del proyecto
 ```
 

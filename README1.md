@@ -5,13 +5,6 @@
 
 Este proyecto aborda un problema crucial para los departamentos de Recursos Humanos: predecir qué empleados tienen mayor probabilidad de dejar la empresa en el próximo año. A partir de datos históricos, hemos desarrollado y evaluado modelos de Machine Learning para identificar patrones y tendencias en la rotación laboral.
 
-El enfoque no solo es técnico, sino también analítico, explorando preguntas como:
-- ¿Es la satisfacción laboral un predictor clave?
-- ¿Las largas horas de trabajo o las relaciones tensas con los jefes afectan la decisión de quedarse?
-- ¿Qué papel juegan las promociones o aumentos de salario?
-
-Los resultados no solo buscan ser precisos, sino también útiles para tomar decisiones informadas en la gestión del talento.
-
 ---
 
 ## 🗂️ Estructura del Proyecto
@@ -106,6 +99,67 @@ Para todos mis modelos utilicé la misma secuencia de pasos de preprocesamiento:
 | **Random Forest**    | Media              | Alto            | Muy buenas (0.91)   | Baja          | Costoso y sobreajustado.            |
 | **Gradient Boosting**| Moderada           | Moderado        | Buenas (0.88-0.90)  | Moderada      | Competitivo, buen equilibrio.       |
 | **Decision Tree**    | Baja               | Bajo            | Débiles (0.79)      | Moderada      | Modelo menos competitivo.           |
+
+
+# 📊 Predicción de Rotación de Empleados: Conclusiones
+
+Este proyecto aborda un problema crucial para los departamentos de Recursos Humanos: predecir qué empleados tienen mayor probabilidad de dejar la empresa en el próximo año. A partir de datos históricos, hemos desarrollado y evaluado modelos de Machine Learning para identificar patrones y tendencias en la rotación laboral. 
+
+El enfoque no solo es técnico, sino también analítico, destacando los siguientes hallazgos clave:
+
+## 📌 Principales Descubrimientos
+
+- **Edad**: 
+  - El punto más alto de rotación se encuentra en empleados menores de 30 años. A partir de esa edad, las salidas disminuyen progresivamente.
+
+- **Distancia al trabajo**:
+  - Los empleados que viven a menor distancia del lugar de trabajo tienen mayor probabilidad de abandonar la empresa.
+
+- **Salario**:
+  - Aquellos con ingresos por debajo de la media son más propensos a salir. Esto se relaciona con la mediana salarial, que se encuentra dentro de este grupo de salidas.
+
+- **Incrementos salariales**:
+  - Aunque no se identificaron patrones muy marcados, los empleados con porcentajes de aumento salarial menores son más propensos a abandonar la empresa.
+
+- **Años trabajados**:
+  - El primer año es crítico en la rotación laboral. La mayor parte de las salidas ocurre durante el primer año en la empresa, bajo un nuevo manager o tras recibir un ascenso.
+
+- **Frecuencia de viajes**:
+  - Los empleados que viajan con poca frecuencia son más propensos a irse.
+
+- **Departamentos**:
+  - El departamento de investigación y desarrollo concentra la mayor fuga de empleados.
+
+- **Nivel educativo**:
+  - Los empleados con un nivel educativo intermedio (tipo 3) tienen mayor probabilidad de salir. A partir de este nivel, las salidas disminuyen, sugiriendo que empleados con mayor formación prefieren quedarse.
+
+- **Campo de educación**:
+  - Los empleados con formación en ciencias de la vida (Life Sciences) y medicina (Medical) presentan mayores índices de rotación. Esto podría estar relacionado con la especialización de la empresa y las proyecciones personales de los empleados.
+
+- **Género**:
+  - Los hombres son el grupo con mayor probabilidad de rotación.
+
+- **Nivel de puesto (JobLevel)**:
+  - Los empleados en los niveles más bajos tienen mayores índices de rotación, posiblemente asociados con salidas prematuras.
+
+- **Tipo de rol**:
+  - Tres roles destacan por su alta rotación: Research Scientist, Sales Executive y Laboratory Technician. Esto refleja tendencias en sectores como ciencias (ya observadas en la categoría de Educación) y ventas, que suelen ser áreas con alta rotación debido a sus exigencias.
+
+- **Estado civil**:
+  - Los empleados solteros son el grupo con mayor rotación, probablemente debido a una mayor flexibilidad y menos compromisos personales.
+
+- **Entrenamientos**:
+  - Los empleados que recibieron entre 2 y 3 entrenamientos en el último año presentan mayores tasas de salida.
+
+- **Satisfacción del empleado**:
+  - No se observaron diferencias significativas entre los niveles de satisfacción.
+
+- **Balance vida-trabajo y desempeño**:
+  - Los empleados en el grupo 3 de Balance Vida-Trabajo, Job Involvement y Performance Rating tienen mayor presencia en los casos de rotación.
+
+## 📈 Conclusiones Finales
+
+Estos hallazgos ofrecen una visión integral de los factores más relevantes que influyen en la rotación de empleados. La identificación de estos patrones no solo permite construir modelos predictivos más precisos, sino que también facilita la implementación de estrategias específicas para reducir la rotación laboral y mejorar la retención del talento.
 
 ---
 

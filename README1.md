@@ -1,4 +1,4 @@
-
+![Oficina](https://github.com/ngcarvajall/Proyecto8---Predicci-n-de-Retenci-n-de-Empleados/blob/main/DALL%C2%B7E%202024-12-01%2021.48.19%20-%20A%20wide%20view%20of%20a%20modern%20and%20professional%20meeting%20room%20representing%20human%20resources.%20The%20image%20features%20a%20large%20glass%20conference%20table%20surrounded%20by%20di.webp)
 # 📊 Predicción de Rotación de Empleados: Modelos de Machine Learning
 
 ## 📖 Descripción

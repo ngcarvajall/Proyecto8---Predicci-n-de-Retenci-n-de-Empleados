@@ -173,7 +173,7 @@ def predict():
 
     return jsonify({
         'prediccion': int(prediccion[0]),
-        'probabilidad': float(probabilidad[0][1])
+        'probabilidad de que se vaya': float(probabilidad[0][1])
     })
 
 if __name__ == '__main__':

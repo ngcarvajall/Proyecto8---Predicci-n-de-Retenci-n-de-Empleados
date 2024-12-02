@@ -7,19 +7,19 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 
 st.set_page_config(
-    page_title="Predicción de la probabilidad de partida de un empleado",
+    page_title="💻Predicción de la probabilidad de partida de un empleado",
     page_icon="📠",
     layout="centered",
 )
 
 # Título y descripción
-st.title("📠 Predicción de la probabilidad de partida de un empleado")
-st.write("Usa esta aplicación para predecir la probabilidad de partida de un empleado de tu empresa basandote en sus respuestas a encuestas y características demográficas.")
+st.title(" Predicción de la probabilidad de partida de un empleado")
+st.write("Usa esta aplicación para predecir si tus empleados son propensos a irse en el próximo años")
 
 # Mostrar una imagen
 # st.image(
 #     "C:\Users\DELL\Git\Proyecto8---Predicci-n-de-Retenci-n-de-Empleados\imagen.webp",  # URL de la imagen
-#     caption="Retén a tus empleados.",
+#     caption="Retención de tus empleados.",
 #     use_column_width=True,
 # )
 
@@ -111,7 +111,6 @@ if st.button("Predecir si el empleado se va 🤞"):
   
     new_employee=pd.DataFrame(new_employee)
 
-    # new_employee.drop(columns="Attrition", inplace=True)
     new_employee_encoded = scaler.transform(new_employee)
     new_employee_encoded = pd.DataFrame(new_employee_encoded)
     # new_house_encoded.drop(columns=6,inplace=True)
@@ -126,52 +125,20 @@ if st.button("Predecir si el empleado se va 🤞"):
     # Convertimos a un DataFrame
     onehot_df = pd.DataFrame(onehot.toarray(), columns=column_names)
     #onehot_df.drop(columns=col_encode,inplace=True)                    
-    # Columnas categóricas y numéricas                    #Poner aquí mis columnas concretas
-    # categorical_columns = ['propertyType', 'exterior', 'rooms', 'bathrooms', 'status', 'floor', 'hasLift']
-  
     
-    # # Aplicar el OneHotEncoder, TargetEncoder y StandardScaler
-    # diccionario_encoding = {"onehot": ["propertyType", "exterior", "rooms", "status", "floor", "hasLift", "parkingSpace"], 
-    #                     "dummies": [], # no metemos ninguna
-    #                     'ordinal' : {}, #no metemos ninguna
-    #                     "label": [] , # no metemos ninguna columna porque no queremos en ningún caso que se asignen las categorías de forma aleatoria
-    #                     "frequency": [], # no metemos ninguna columna porque no coincide el orden del value counts con las categorias y la variable respuesta
-    #                     "target": ["bathrooms", "province", "municipality", "district"]  
-    #                     }
-    # col_encode=diccionario_encoding.get("onehot", [])
-    # st.write(col_encode)
     
              #Añadir el Onehot
     # Codificación de las columnas categóricas
     new_employee.drop(columns = col_encode,inplace=True)
     new_employee_encoded = pd.concat([new_employee, onehot_df], axis=1)
-    #new_house_encoded.drop(columns=col_encode,inplace=True)
-    # new_house_encoded = pd.DataFrame()
+
     new_employee_encoded["Attrition"] = np.nan
     new_employee_encoded = target_encoder.transform(new_employee_encoded)
     
 
     new_employee_encoded2=new_employee_encoded.copy()
     new_employee_encoded3=new_employee_encoded.copy()
-    # One-Hot Encoding
-    # Hacemos el OneHot Encoder
-
-    # st.write(onehot_df)
-
-    # concatenamos los resultados obtenidos en la transformación con el DataFrame original
-    #new_house.drop(columns=col_encode,inplace=True)
-
-
-
-    # # Target Encoding (corrige el uso)
-    # encoded_target = target_encoder.transform(new_house_encoded[["bathrooms", "province", "municipality", "district"]])
-
-    # # Combina los datos codificados
-    # new_house_encoded = pd.concat([new_house_encoded, encoded_target], axis=1)
-    
-    # Filtra las columnas numéricas y escala
-   #EL DATA FRAME AL PASAR POR EL SCALER NO PUEDE TENER PRICE PERO EN EL MODLEO SI QUE TIENE QUE ESTAR PRICE
-    
+ 
     # Realizar la predicción
     prediction = model.predict(new_employee_encoded)[0]
     if prediction ==0:

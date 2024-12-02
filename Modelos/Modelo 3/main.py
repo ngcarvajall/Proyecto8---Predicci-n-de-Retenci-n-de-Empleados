@@ -14,10 +14,10 @@ with open('../../Datos_Mod3/Pickels/transformer_scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
 
 with open('../../Datos_Mod3/Pickels/transformer_one.pkl', 'rb') as f:
-    target = pickle.load(f)
+    one = pickle.load(f)
 
 with open('../../Datos_Mod3/Pickels/transformer_target.pkl', 'rb') as f:
-    one = pickle.load(f)
+    target = pickle.load(f)
 
 variables_one = ['Education',
  'Gender',
@@ -125,63 +125,56 @@ def home(): # principal, funcion
     
 @app.route("/predict", methods=['POST'])
 def predict():
-    try:
-        # Obtener datos JSON y convertir a DataFrame
-        data = request.get_json()
-        df_pred = pd.DataFrame(data, index=[0])
-        print("Datos iniciales recibidos:")
-        print(df_pred)
+    # try:
+    # Obtener datos JSON y convertir a DataFrame
+    data = request.get_json()
+    df_pred = pd.DataFrame(data, index=[0])
+    print("Datos iniciales recibidos:")
+    print(df_pred)
 
-        # Procesar datos
-        tasa_de_cambio = 0.0113
-        df_pred['MonthlyIncome'] = df_pred['MonthlyIncome'].apply(lambda x: x * tasa_de_cambio)
+    # Procesar datos
+    tasa_de_cambio = 0.0113
+    df_pred['MonthlyIncome'] = df_pred['MonthlyIncome'].apply(lambda x: x * tasa_de_cambio)
 
-        # Mapear y convertir tipos
-        df_pred['Education'] = df_pred['Education'].astype('category')
-        df_pred['JobLevel'] = df_pred['JobLevel'].astype('category')
-        df_pred['StockOptionLevel'] = df_pred['StockOptionLevel'].astype('category')
-        df_pred['EnvironmentSatisfaction'] = df_pred['EnvironmentSatisfaction'].astype(str)
-        df_pred['JobSatisfaction'] = df_pred['JobSatisfaction'].astype(str)
-        df_pred['WorkLifeBalance'] = df_pred['WorkLifeBalance'].astype(str)
-        df_pred['JobInvolvement'] = df_pred['JobInvolvement'].astype('category')
-        df_pred['PerformanceRating'] = df_pred['PerformanceRating'].astype('category')
-        df_pred['TrainingTimesLastYear'] = df_pred['TrainingTimesLastYear'].astype('category')
+    # Mapear y convertir tipos
+    df_pred['Education'] = df_pred['Education'].astype('category')
+    df_pred['JobLevel'] = df_pred['JobLevel'].astype('category')
+    df_pred['StockOptionLevel'] = df_pred['StockOptionLevel'].astype('category')
+    df_pred['EnvironmentSatisfaction'] = df_pred['EnvironmentSatisfaction'].astype(str)
+    df_pred['JobSatisfaction'] = df_pred['JobSatisfaction'].astype(str)
+    df_pred['WorkLifeBalance'] = df_pred['WorkLifeBalance'].astype(str)
+    df_pred['JobInvolvement'] = df_pred['JobInvolvement'].astype('category')
+    df_pred['PerformanceRating'] = df_pred['PerformanceRating'].astype('category')
+    df_pred['TrainingTimesLastYear'] = df_pred['TrainingTimesLastYear'].astype('category')
 
-        # Escalado de columnas numéricas
-        col_numericas = df_pred.select_dtypes(include=np.number).columns
-        print("Columnas numéricas:", col_numericas)
-        df_pred[col_numericas] = scaler.transform(df_pred[col_numericas])
+    # Escalado de columnas numéricas
+    col_numericas = df_pred.select_dtypes(include=np.number).columns
+    print("Columnas numéricas:", col_numericas)
+    df_pred[col_numericas] = scaler.transform(df_pred[col_numericas])
 
-        # One-Hot Encoding
-        print("Aplicando One-Hot Encoding...")
-        df_one = pd.DataFrame(one.transform(df_pred[variables_one]).toarray(), columns=one.get_feature_names_out())
-        df_pred = pd.concat([df_pred, df_one], axis=1)
-        df_pred.drop(columns=variables_one, inplace=True)
+    # One-Hot Encoding
+    print("Aplicando One-Hot Encoding...")
+    df_one = pd.DataFrame(one.transform(df_pred[variables_one]).toarray(), columns=one.get_feature_names_out())
+    df_pred = pd.concat([df_pred, df_one], axis=1)
+    df_pred.drop(columns=variables_one, inplace=True)
 
-        # Añadir columna ficticia para Target Encoding
-        df_pred['Attrition'] = np.nan
-        df_pred = target.transform(df_pred)
-        df_pred.drop(columns=['Attrition'], inplace=True)
+    # Añadir columna ficticia para Target Encoding
+    df_pred['Attrition'] = np.nan
+    df_pred = target.transform(df_pred)
+    df_pred.drop(columns=['Attrition'], inplace=True)
 
-        # Alinear columnas con las esperadas por el modelo
-        expected_columns = model.feature_names_in_
-        df_pred = df_pred.reindex(columns=expected_columns, fill_value=0)
+    # Alinear columnas con las esperadas por el modelo
+    expected_columns = model.feature_names_in_
+    df_pred = df_pred.reindex(columns=expected_columns, fill_value=0)
 
-        # Realizar predicción
-        prediccion = model.predict(df_pred)
-        probabilidad = model.predict_proba(df_pred)
+    # Realizar predicción
+    prediccion = model.predict(df_pred)
+    probabilidad = model.predict_proba(df_pred)
 
-        return jsonify({
-            'prediccion': int(prediccion[0]),
-            'probabilidad': float(probabilidad[0][1])
-        })
-
-    except KeyError as e:
-        return jsonify({'error': f'Falta una columna clave o valor inválido: {str(e)}'})
-    except ValueError as e:
-        return jsonify({'error': f'Error en los valores de las columnas: {str(e)}'})
-    except Exception as e:
-        return jsonify({'error': f'Error inesperado: {str(e)}'})
+    return jsonify({
+        'prediccion': int(prediccion[0]),
+        'probabilidad': float(probabilidad[0][1])
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)
